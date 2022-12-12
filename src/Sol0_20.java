@@ -24,12 +24,24 @@ public class Sol0_20 {
 			for (char aChar : chars) {
 				map.put(aChar, map.getOrDefault(aChar, 0) + 1);
 			}
-		
 			
+			List<Character> list = new ArrayList<>();
+			for (Character character : map.keySet()) {
+				if (map.get(character) == 1) {
+					list.add(character);
+				}
+			}
 			
+			// 정렬처리
+			Collections.sort(list);
 			
+			StringBuilder sb = new StringBuilder();
+			for (Character character : list) {
+				sb.append(character);
+			}
 			
-			return null;
+			return sb.toString();
 		}
+		
 	}
 }
