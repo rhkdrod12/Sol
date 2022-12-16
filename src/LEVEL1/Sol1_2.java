@@ -11,7 +11,6 @@ public class Sol1_2 {
 		
 		
 		int[] ingredient = {2};
-		
 		int solution = new Solution().solution(ingredient);
 		
 		System.out.println("solution = " + solution);

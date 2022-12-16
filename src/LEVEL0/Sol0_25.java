@@ -48,43 +48,9 @@ public class Sol0_25 {
 								}
 							}
 						}
-						
-						// // 오른쪽
-						// if (visit(i, j + 1, visited)) {
-						// 	answer++;
-						// }
-						// // 오른쪽 대각선 아래
-						// if (visit(i + 1, j + 1, visited)) {
-						// 	answer++;
-						// }
-						// // 아래
-						// if (visit(i + 1, j, visited)) {
-						// 	answer++;
-						// }
-						// // 왼쪽 대각선 아래
-						// if (visit(i + 1, j - 1, visited)) {
-						// 	answer++;
-						// }
-						// // 왼쪽
-						// if (visit(i, j - 1, visited)) {
-						// 	answer++;
-						// }
-						// // 왼쪽 대각선 위
-						// if (visit(i - 1, j - 1, visited)) {
-						// 	answer++;
-						// }
-						// // 위
-						// if (visit(i - 1, j, visited)) {
-						// 	answer++;
-						// }
-						// // 오른쪽 대각선 위
-						// if (visit(i - 1, j + 1, visited)) {
-						// 	answer++;
-						// }
 					}
 				}
 			}
-			
 			return x*y - answer;
 		}
 	}
