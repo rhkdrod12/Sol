@@ -1,10 +1,6 @@
 package LEVEL2;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class Sol2_1 {
 	public static void printAnswer(Object val){
@@ -23,12 +19,12 @@ public class Sol2_1 {
 	
 	public static void main(String[] args) {
 		
-		String[] grid = {"SL", "LR"};
+		String[] grid = {"SL","LR"};
 		
 		int sIdx = 0;
 		int n = 5;
 		int m = 3;
-		
+
 		int idx = sIdx;
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
@@ -37,70 +33,145 @@ public class Sol2_1 {
 			System.out.println();
 		}
 		
-		// ((2 / m) + 1) % n * m + (2 % m)
-		
 		System.out.println();
-		//printAnswer(new Solution().solution(grid));
+		printAnswer(new Solution().solution(grid));
 	}
 	
+	
 	static class Solution {
-		// 빛의 경로 사이클
+		
+		char[] ableWord;
+		int m;
+		int n;
+		int totalIdx;
+		
 		public int[] solution(String[] grid) {
-			// 빛이 이동하면서 자기 자신으로 돌아오면 사이클 종료
-			// 끝 점에서 나가면 반대편으로 돌아오는 구조이기 떄문에 사이클이 되지 않는 경우는 없음
+			int[] answer = {};
 			
-			// 특정 격자에서 나간 사이클이 있을 때 해당 반대방향으로 오는 사이클을 연산할 필요는 없음 -> 어차피 사이클 수가 같을 테니까.
+			m = grid[0].length();
+			n = grid.length;
 			
-			// 특정 지점에서 특정 지점으로 이동했을 때 그 때 그 다른 지점으로 이동한 기록이 없으면 새로운 사이클이라는 거니
-			// 그렇게 판단하면 될 것 같은데..
-			// 정방향 역방향 둘다 생각해서 판단하면 될 것 같고..
+			totalIdx = 0;
+			ableWord = new char[m * n];
 			
-			// visited[i][j][k] : (i,j)에서 k방향 쪽으로 방문여부
-			// 0 <= k < 4 (k는 위, 아래, 오른쪽, 왼쪽을 의미)
-			// i 는 격자 번호를 의미
-			
-			// 배열의 최대 크기는 알수 없기 떄문에 List를 사용하여 나중에 배열로 반화처리하겠음
-			int n = grid.length;
-			int m = grid[0].length();
-			int k = 4;
-			List<Integer> result = new ArrayList<>();
-			
-			// 음.. 그냥 (i, j)를 index화 하는게 나으려나.. 괜히 3중 배열인디..
-			// 방문 여부
-			boolean[][][] visited = new boolean[n][m][k];
-			// 이동 가능 부분 저장
-			char[][] moveAble = new char[n][];
-			for (int i = 0; i < grid.length; i++) {
-				moveAble[i] = grid[i].toCharArray();
+			int idx = 0;
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < m; j++) {
+					System.out.printf("%02d ", idx++);
+				}
+				System.out.println();
 			}
 			
-			// for (int k = -1; k < 2; k++) {
-			// 	for (int h = -1; h < 2; h++) {
-			// 		if (visit(i + k , j + h, visited)) {
-			// 			answer++;
-			// 		}
-			// 	}
-			// }
-			
-			for (int i = 0; i < moveAble.length; i++) {
-				for (int j = 0; j < moveAble[i].length; j++) {
-					for (int e = 0; e < k; e++) {
-					
-					}
+			for (String s : grid) {
+				for (char c : s.toCharArray()) {
+					ableWord[totalIdx++] = c;
 				}
 			}
 			
-			return null;
+			int cal = cal(0, 0, 0, 0, new boolean[totalIdx][4], 0);
+			System.out.println(cal);
+			
+			
+			return answer;
 		}
-		// visited[y][x][k] : (x,y)에 k방향쪽에서 날라왔을 때 방문 여부
-		// k는 날라온 방향 0 : 위 , 1: 오른쪽, 2: 아래쪽, 3: 왼쪽
-		// public boolean BFS(int x, int y, int k, char[][] moveAble, boolean[][][] visited) {
-		// 	if(visited[y][x][k]){
-		// 		return false;
-		// 	}else ()
-		//
-		// }
 		
+		/**
+		 * 현재위치와 방향이 시작위치와 시작방향과 일치하면 사이클 형성가능
+		 * 현재위치와 방향이 이미 방문했던 위치인데 시작위치와 시작방향이 아니면 사이클 형성 불가능
+		 *
+		 * @param idx       현재 위치
+		 * @param direct    현재 위치로 진입한방향
+		 * @param sIdx      시작 위치
+		 * @param sDirect   시작 위치로 진입한방향
+		 */
+		public int cal(int idx, int direct, int sIdx, int sDirect, boolean[][] visited, int result) {
+			
+			System.out.printf("idx : %2d , direct: %2d result: %d \n", idx, direct, result);
+			
+			// 시작위치와 시작방향이 같으면 종료
+			if (idx == sIdx && direct == sDirect && visited[idx][direct]) {
+				return result;
+			} else if (visited[idx][direct]) {
+				return -1;
+			}
+			
+			// 해당 idx와 방향을 방문처리
+			visited[idx][direct] = true;
+			
+			char ch = ableWord[idx];
+			int newDirect = newDirect(direct, ch);
+			return cal(movePosition(idx, newDirect), newDirect, sIdx, sDirect, visited, result + 1);
+		}
+		
+		int newDirect(int direct, char moveAble){
+			int newDirect;
+			// 오른쪽
+			if (moveAble == 'R') {
+				newDirect = (direct + 1) % 4;
+			}
+			// 왼쪽
+			else if (moveAble == 'L') {
+				newDirect = (direct + 3) % 4;
+			}
+			// 직진
+			else{
+				newDirect = (direct) % 4;
+			}
+			return newDirect;
+		}
+		
+		/**
+		 *  해당 방향이 k이고 이동가능한 곳이 D면 다음 위치에서 R에서 출발하여 D방향에서 목적지에 도착
+		 *
+		 *  k   D   N   R
+		 *  0   S   0   2
+		 *  1   S   1   3
+		 *  2   S   2   0
+		 *  3   S   3   1
+		 *
+		 *  0   R   1   3
+		 *  1   R   2   0
+		 *  2   R   3   1
+		 *  3   R   0   2
+		 *
+		 *  0   L   3   1
+		 *  1   L   0   2
+		 *  2   L   1   3
+		 *  3   L   2   0
+		 */
+		
+		int movePosition(int idx, int direct) {
+			// switch (direct) {
+			// 	// 위쪽 방향
+			// 	case 0:
+			// 		return idx - m > 0 ? idx - m : (n - 1) * m + (idx % m);
+			// 	// 오른쪽
+			// 	case 1:
+			// 		return (idx + 1) % m != 0 ? idx + 1 : idx / m * m;
+			// 	// 아래
+			// 	case 2:
+			// 		return idx + m < totalIdx ? idx + m : (idx % m);
+			// 	// 왼쪽
+			// 	case 3:
+			// 		return idx % m != 0 ? idx - 1 : ((idx / m) + 1) * m - 1;
+			// }
+			switch (direct) {
+				// 위쪽 방향
+				case 0:
+					return idx + m < totalIdx ? idx + m : (idx % m);
+				// 오른쪽
+				case 1:
+					return idx % m != 0 ? idx - 1 : ((idx / m) + 1) * m - 1;
+				// 아래
+				case 2:
+					return idx - m >= 0 ? idx - m : (n - 1) * m + (idx % m);
+				// 왼쪽
+				case 3:
+					return (idx + 1) % m != 0 ? idx + 1 : idx / m * m;
+			}
+			
+			return 0;
+		}
 	}
 }
 
