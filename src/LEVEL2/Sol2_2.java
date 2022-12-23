@@ -122,9 +122,7 @@ public class Sol2_2 {
 		public boolean setCondition(int a, int b, int distance, char condition) {
 			for (int i = 0; i < maxDistance; i++) {
 				// 조건 중에서 이미갈 수 없는 상황이면
-				if (conditions[a][b][i] || conditions[b][a][i]) {
-					return false;
-				}else{
+				if (!(conditions[a][b][i] || conditions[b][a][i])) {
 					boolean flag = !operation(i, distance, condition);
 					conditions[a][b][i] = flag;
 					conditions[b][a][i] = flag;
