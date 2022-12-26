@@ -1,7 +1,6 @@
 package LEVEL2;
 
 import java.util.Arrays;
-import java.util.PriorityQueue;
 
 public class Sol2_4 {
 	public static void printAnswer(Object val){
@@ -21,10 +20,7 @@ public class Sol2_4 {
 	public static void main(String[] args) {
 		
 		// int[][] line = {{2, -1, 4}, {-2, -1, 4}, {0, -1, 1}, {5, -8, -12}, {5, 8, 12}};
-		// int[][] line = {{1, -1, 0}, {2, -1, 0}};
-		// int[][] line = {{1, -1, 0}, {2, -1, 0}, {4, -1, 0}};
 		int[][] line = {{0, 1, -1}, {1, 0, -1}, {1, 0, 1}};
-		
 		
 		// int n = 6;
 		// int k = 4;
@@ -55,42 +51,36 @@ public class Sol2_4 {
 			int minX = Integer.MAX_VALUE;
 			int minY = Integer.MAX_VALUE;
 			
-			int maxLength = 1000;
-			
-			int n = 0;
-			int[][] arr = new int[maxLength][2];
+			int mid = 500;
+			boolean[][] points = new boolean[1001][1001];
 			for (int i = 0; i < line.length; i++) {
 				for (int j = i + 1; j < line.length; j++) {
 					long[] point = pointCal(line[i], line[j]);
-					if (point != null) {
-						int pointX = (int) (point[0] % maxLength);
-						int pointY = (int) (point[1] % maxLength);
-						
-						maxX = Math.max(pointX, maxX);
-						maxY = Math.max(pointY, maxY);
-						minX = Math.min(pointX, minX);
-						minY = Math.min(pointY, minY);
-						
-						arr[n++] = new int[]{pointX, pointY};
+					if (point != null && Math.abs(point[0]) <= 1000 && Math.abs(point[1]) <= 1000) {
+						maxX = (int)Math.max(point[0], maxX);
+						maxY = (int)Math.max(point[1], maxY);
+						minX = (int)Math.min(point[0], minX);
+						minY = (int)Math.min(point[1], minY);
+						points[(int) (point[1] + mid)][(int) (point[0] + mid)] = true;
 					}
 				}
 			}
 			
-			int rengeX = Math.abs(maxX - minX + 1);
-			int rengeY = Math.abs(maxY - minY + 1);
 			
-			boolean[][] points = new boolean[rengeY][rengeX];
-			for (int i = 0; i < n; i++) {
-				points[arr[i][1] - minY][arr[i][0] - minX] = true;
-			}
+			// -8 ~ -4
+			// 길이는 4
+			// i = 0 부터일 때 i - min
 			
-			String[] answer = new String[points.length];
-			for (int i = rengeY - 1; i >= 0; i--) {
+			int y1 = Math.abs(maxY - minY);
+			int x1 = Math.abs(maxX - minX);
+			
+			String[] answer = new String[maxY - minY + 1];
+			for (int i = y1; i >= 0; i--) {
 				StringBuilder sb = new StringBuilder();
-				for (int j = 0; j <= rengeX - 1; j++) {
-					sb.append(points[i][j] ? '*' : '.');
+				for (int j = 0; j <= x1; j++) {
+					sb.append(points[i + minY + mid][j + minX + mid] ? '*' : '.');
 				}
-				answer[rengeY - 1 - i] = sb.toString();
+				answer[y1 - i] = sb.toString();
 			}
 			
 			return answer;
@@ -98,17 +88,17 @@ public class Sol2_4 {
 		
 		public long[] pointCal(int[] a, int[] b) {
 			
-			long xx = ((long)a[1] * (long)b[2] - (long)a[2] * (long)b[1]);
-			long yy = ((long)a[2] * (long)b[0] - (long)a[0] * (long)b[2]);
-			long bb = ((long)a[0] * (long)b[1] - (long)a[1] * (long)b[0]);
+			long xx = ((long)a[1] * b[2] - (long)a[2] * b[1]);
+			long yy = ((long) a[2] * b[0] - (long)a[0] * b[2]);
+			long bb = ((long)a[0] * b[1] - (long)a[1] * b[0]);
 			
-			// 나머지가 있으면 소수점 자리가 있다는 소리이니 교점이라고 해도 패스
 			if (bb == 0 || xx % bb != 0 || yy % bb != 0) {
 				return null;
 			}else{
 				return new long[]{(xx / bb), (yy / bb)};
 			}
 		}
+		
 	}
 }
 
