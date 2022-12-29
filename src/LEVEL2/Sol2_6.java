@@ -21,7 +21,7 @@ public class Sol2_6 {
 	public static void main(String[] args) {
 		
 		int k = 2;
-		int[][] ranges = {{0,0}, {0, -50}, {50, 0}, {0, -1}, {1, 0}};
+		int[][] ranges = {{0, -1}, {1, 0}};
 		
 		printAnswer(new Solution().solution(k, ranges));
 	}
@@ -30,8 +30,8 @@ public class Sol2_6 {
 		
 		public double[] solution(int k, int[][] ranges) {
 			
-			
 			// 크기를 지정할 수 없음으로 리스트 사용
+			// 리스트에는 인덱스가 i일 떄 i부터 i+1까지의 넓이를 저장
 			ArrayList<Double> areaList = new ArrayList<>();
 			
 			int curVal = k;
@@ -52,11 +52,11 @@ public class Sol2_6 {
 			
 			// sumArea[i][j] : i에서 j + 1까지의 면적합을 저장하고 있는 배열 생성
 			int size = areaList.size();
-			double[][] sumArea = new double[size][size];
+			double[][] sumArea = new double[size + 1][size + 1];
 			for (int i = 0; i < size; i++) {
-				sumArea[i][i] = areaList.get(i);
-				for (int j = i+1; j < size; j++) {
-					sumArea[i][j] = sumArea[i][j - 1] + areaList.get(j);
+				sumArea[i][i+1] = areaList.get(i);
+				for (int j = i+2; j <= size; j++) {
+					sumArea[i][j] = sumArea[i][j - 1] + areaList.get(j-1);
 				}
 			}
 			
@@ -64,7 +64,7 @@ public class Sol2_6 {
 			for (int i = 0; i < ranges.length; i++) {
 				int a = ranges[i][0];
 				int b = ranges[i][1] + size;
-				answer[i] = a > b || b <= 0 ? -1d : sumArea[a][b-1];
+				answer[i] = a > b || b < 0 || a > size ? -1d : sumArea[a][b];
 			}
 			
 			return answer;
