@@ -1,12 +1,9 @@
 package LEVEL2;
 
-import org.w3c.dom.Node;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Sol2_9 {
 	public static void printAnswer(Object val){
@@ -50,7 +47,6 @@ public class Sol2_9 {
 		// 순위 검색
 		public int[] solution(String[] info, String[] query) {
 			int[] answer = new int[query.length];
-			
 			/**
 			 * 개발 언어
 			 * cpp, java, python
@@ -62,22 +58,10 @@ public class Sol2_9 {
 			 * chicken, pizza
 			 */
 			
-			String[] devLang = {"-", "cpp", "java", "python"};
-			String[] devJob = {"-", "backend", "frontend"};
-			String[] devCar = {"-", "junior", "senior"};
-			String[] devFood = {"-", "chicken", "pizza"};
-			
-			String[][] caseArr = {devLang, devJob, devCar, devFood};
-			
-			int idx = 0;
-			for (String[] dev : caseArr) {
-				dev.for
+			String[] dev = {"-", "cpp", "java", "python", "backend", "frontend", "junior", "senior", "chicken", "pizza"};
+			for (int i = 0; i < dev.length; i++) {
+				devMap.put(dev[i], i);
 			}
-			
-			// String[] dev = {"-", "cpp", "java", "python", "backend", "frontend", "junior", "senior", "chicken", "pizza"};
-			// for (int i = 0; i < dev.length; i++) {
-			// 	devMap.put(dev[i], i);
-			// }
 			
 			// 모든 경우의 수 구하기
 			getQueryCase(info);
@@ -85,7 +69,6 @@ public class Sol2_9 {
 			for (int i = 0; i < query.length; i++) {
 				answer[i] = getCnt(query[i].split(" "));
 			}
-			
 			return answer;
 		}
 		
@@ -100,51 +83,21 @@ public class Sol2_9 {
 			
 			int target = Integer.parseInt(query[7]);
 			ArrayList<Integer> scoreCase = queryCaseMap.get(sb.toString());
-			
-			int result = 0;
-			if (scoreCase != null) {
-				for (int i = 0; i < scoreCase.size(); i++) {
-					if (target <= scoreCase.get(i)) {
-						result = scoreCase.size() - i;
-						break;
-					}
-				}
-			}
-			return result;
+			return scoreCase != null ? binarySearch(target, scoreCase) : 0;
 		}
 		
-		int findIndex(int val, int startIndex, int endIndex, List<Integer> list) {
-			int nextIdx = startIndex + (endIndex - startIndex) / 2;
-			if (startIndex == nextIdx) {
-				if (list.get(nextIdx) >= val) {
-					return nextIdx;
-				} else if (list.size() > (nextIdx + 1) && list.get(nextIdx + 1) >= val) {
-					return nextIdx + 1;
-				} else{
-					return -1;
+		int binarySearch(int val, List<Integer> list) {
+			int startIdx = 0;
+			int endIdx = list.size() - 1;
+			while (startIdx <= endIdx) {
+				int mid = (startIdx + endIdx) / 2 ;
+				if (list.get(mid) < val) {
+					startIdx = mid + 1;
+				}else{
+					endIdx = mid - 1;
 				}
 			}
-			
-			Integer integer = list.get(nextIdx);
-			// 해당 수보다 val이 크면
-			if (val > integer) {
-				return findIndex(val, nextIdx, endIndex, list);
-			}
-			// 해당 수보다 val이 작으면
-			else if (val < integer) {
-				return findIndex(val, startIndex, nextIdx, list);
-			}
-			// 같으면
-			else{
-				for (int i = nextIdx - 1; i > startIndex ; i--) {
-					if (val == list.get(i)) {
-						nextIdx = i;
-					}else{
-						break;
-					}
-				}
-				return nextIdx;
-			}
+			return list.size() - startIdx;
 		}
 		
 		HashMap<String, Integer> devMap = new HashMap<>();
@@ -172,6 +125,7 @@ public class Sol2_9 {
 					integers.add(devScore);
 					queryCaseMap.put(str, integers);
 				}
+				
 				return;
 			}
 			
