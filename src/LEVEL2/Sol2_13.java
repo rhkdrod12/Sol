@@ -2,7 +2,7 @@ package LEVEL2;
 
 import java.util.Arrays;
 
-public class Sol2_11 {
+public class Sol2_13 {
 	public static void printAnswer(Object val){
 		if (val instanceof int[]) {
 			System.out.println("val = " + Arrays.toString((int[]) val));
@@ -19,38 +19,42 @@ public class Sol2_11 {
 	
 	public static void main(String[] args) {
 		
-		long begin = 1;
-		long end = 100;
+		int n = 4;
 		
-		printAnswer(new Solution().solution(begin, end));
+		printAnswer(new Solution().solution(n));
 		
 	}
 	
 	static class Solution {
-		// 숫자 블록
-		public int[] solution(long begin, long end) {
-			int[] answer = new int[(int)(end - begin + 1)];
+		// N-Queen
+		public int solution(int n) {
+			int answer = 0;
 			
-			int idx = 0;
-			if (begin == 1) {
-				begin++;
-				answer[idx++] = 0;
-			}
+			length = n;
 			
-			for (long i = begin; i <= end; i++) {
-				answer[idx++] = solve(i);
-			}
+			
 			
 			return answer;
 		}
 		
-		public int solve(long i) {
-			for (long j = 2; j*j <= i; j++) {
-				if (i % j == 0 && i / j <= 10000000) {
-					return (int) (i / j);
-				}
+		int length;
+		public int bfs(int x, int y, int cnt, boolean[][] visited) {
+			if (visited[x][y]) {
+				return 0;
+			} else if (cnt == visited.length) {
+				return 1;
 			}
-			return 1;
+			
+			for (int i = 0; i < length; i++) {
+				boolean a = visited[i][y];
+				boolean b = visited[x][i];
+				
+				boolean c = visited[x][i];
+				
+				
+			}
+			
+			
 		}
 	}
 }
