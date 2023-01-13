@@ -19,10 +19,15 @@ public class Sol2_16 {
 	
 	public static void main(String[] args) {
 		
-		int cap = 4;
-		int n = 5;
-		int[] deliveries = {1, 0, 3, 1, 2};
-		int[] pickups = {0, 3, 0, 4, 0};
+		// int cap = 4;
+		// int n = 5;
+		// int[] deliveries = {1, 0, 3, 1, 2};
+		// int[] pickups = {0, 3, 0, 4, 0};
+		int cap = 2;
+		int n = 7;
+		int[] deliveries = {1, 0, 2, 0, 1, 0, 2};
+		int[] pickups = {0, 2, 0, 1, 0, 2, 0};
+		
 		
 		printAnswer(new Solution().solution(cap, n, deliveries, pickups));
 		
@@ -31,7 +36,7 @@ public class Sol2_16 {
 	static class Solution {
 		// 택배 배달과 수거하기
 		public long solution(int cap, int n, int[] deliveries, int[] pickups) {
-			long answer = -1;
+			long answer = 0;
 			
 			/*
 			 * 일단 최소 이동거리가 되기 위해서는
@@ -49,56 +54,40 @@ public class Sol2_16 {
 			 *
 			 */
 			
-			int curCap = 0;
-			int deliveryVal = 0;
-			int pickupVal = 0;
-			
 			int deliveryIdx = n - 1;
 			int pickupIdx = n - 1;
 			
-			// 한번 픽업할 때 멀리서부터
-			// 최대한 많이 내려주고
-			// 최대한 많이 가져오면 됨
-			/**
-			 * 단, 최대한 많이 들고 갔을 때에는 다 내려줘야 cap만큼 다시 실을 수 있음
-			 */
-			
-			
 			for (int i = n - 1; i >= 0; i--) {
 				if (deliveries[i] > 0 || pickups[i] > 0) {
-				
-				}
-				if (deliveries[i] > 0) {
-					// 딜리버리해야할 수
-					deliveryVal += deliveries[i];
+					deliveryIdx = reduce(deliveryIdx, cap, deliveries);
+					pickupIdx   = reduce(pickupIdx, cap, pickups);
 					
+					answer += (2 * i + 2);
+					
+					i = Math.max(deliveryIdx, pickupIdx) + 1;
 				}
-				if (pickups[i] > 0) {
-					// 픽업해야할 수
-					pickupVal += pickups[i];
-				}
-
-				// deliveryVal보다 pickupVal이 더 큰 상황이면 cap 안에서
-				// 앞에서 deliveryVal 해왔다는 가정으로 해봅시다.
-				if (deliveries[i] > 0 && deliveries[i] <= -curCap) {
-					deliveryIdx = i;
-					curCap -= deliveries[i];
-				}
-
-				if (pickups[i] > 0 && pickups[i] <= curCap) {
-					// 픽업해야할 수
-					pickupIdx = i;
-					pickupVal += pickups[i];
-				}
-
 			}
-			
 			
 			return answer;
 		}
 		
-		
-		
+		public int reduce(int idx, int cap, int[] arr) {
+			while (idx != -1 && (arr[idx] == 0 || cap != 0)) {
+				if (arr[idx] != 0) {
+					if (arr[idx] <= cap) {
+						cap -= arr[idx];
+						arr[idx] = 0;
+					}else{
+						arr[idx] -= cap;
+						            cap = 0;
+					}
+				}
+				if (arr[idx] == 0) {
+					idx--;
+				}
+			}
+			return idx;
+		}
 	}
 }
 
