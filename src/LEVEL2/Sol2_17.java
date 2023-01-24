@@ -23,16 +23,16 @@ public class Sol2_17 {
 		// int n = 5;
 		// int[] deliveries = {1, 0, 3, 1, 2};
 		// int[] pickups = {0, 3, 0, 4, 0};
-		int n = 20;
-		long l = 1;
-		long r = 1;
+		int n = 3;
+		long l = 25;
+		long r = 25;
 		
 		printAnswer(new Solution().solution(n, l, r));
 		
 	}
 	
 	static class Solution {
-		// 택배 배달과 수거하기
+		// 유사 칸토어 비트열
 		public int solution(int n, long l, long r) {
 			ArrayList<Node> list = new ArrayList<>();
 			list.add(new Node(0, "1", 1));
@@ -45,39 +45,39 @@ public class Sol2_17 {
 			return (int)count(list.get(n), l - 1, r - 1);
 		}
 		
-		public long count(Node node, long l, long r) {
+		public long count(Node node, long startIdx, long endIdx) {
 			
 			long answer = 0;
 			
-			if (r >= node.totalSize) {
-				r = node.totalSize - 1;
+			if (endIdx >= node.totalSize) {
+				endIdx = node.totalSize - 1;
 			}
-			if (l < 0) {
-				l = 0;
+			if (startIdx < 0) {
+				startIdx = 0;
 			}
 			
-			if (l >= node.totalSize || r < 0 || l > r) {
+			if (startIdx >= node.totalSize || endIdx < 0 || startIdx > endIdx) {
 				return 0;
 			} else if (node.n < 2) {
 				char[] chars = node.val.toCharArray();
-				for (int i = (int)l; i <= r; i++) {
+				for (int i = (int)startIdx; i <= endIdx; i++) {
 					if (chars[i] == '1') {
 						answer++;
 					}
 				}
 				return answer;
-			} else if (l == node.sLIdx1 && r == node.totalSize - 1) {
+			} else if (startIdx == node.sLIdx1 && endIdx == node.totalSize - 1) {
 				return node.oneSize;
 			}
 			
 			// 왼쪽 첫번째 구간
-			answer += this.count(node.sideNode, l, r);
+			answer += this.count(node.sideNode, startIdx, endIdx);
 			// 왼쪽 두번째 구간
-			answer += this.count(node.sideNode, l - node.sLIdx2, r - node.sLIdx2);
+			answer += this.count(node.sideNode, startIdx - node.sLIdx2, endIdx - node.sLIdx2);
 			// 오른쪽 첫번째 구간
-			answer += this.count(node.sideNode, l - node.sRIdx1, r - node.sRIdx1);
+			answer += this.count(node.sideNode, startIdx - node.sRIdx1, endIdx - node.sRIdx1);
 			// 오른쪽 두번째 구간
-			answer += this.count(node.sideNode, l - node.sRIdx1 - node.sRIdx2, r - node.sRIdx1 - node.sRIdx2);
+			answer += this.count(node.sideNode, startIdx - node.sRIdx2, endIdx - node.sRIdx2);
 			
 			return answer;
 		}
