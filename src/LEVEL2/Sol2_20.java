@@ -6,16 +6,9 @@ import java.util.ArrayList;
 
 public class Sol2_20 {
 	public static void main(String[] args) {
-		// 5 -> 4
-		/**
-		 * 655555
-		 * 5
-		 * 5
-		 * 3
-		 * 1
-		 * 5 4 5 4 3 1 =
-		 */
-		int storey =  65545;
+		
+		
+		int storey =  95;
 		
 		Print.Out(new Solution().solution(storey));
 	}
@@ -38,7 +31,7 @@ public class Sol2_20 {
 		public int solution(int storey) {
 			int val = storey;
 			int answer = 0;
-			while (val % 10 >0) {
+			while (val > 0) {
 				int target = val % 10;
 				val = (val / 10);
 				if (target > 5 || (target == 5 && val % 10 >= 5)) {
